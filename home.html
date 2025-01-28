@@ -1,14 +1,72 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Heart</title>
     <script src="https://kit.fontawesome.com/d75d72b9b4.js" crossorigin="anonymous"></script>
     <style>
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 40%;
+            height: 10px;
+            background: #4CAF50;
+            z-index: 9999;
+            visibility: visible;
+            border-radius: 5px;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: width 0.5s ease;
+        }
 
-        /* Import nhiều font từ Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;700&family=Pacifico&family=Lobster&family=Roboto:wght@400;700&family=Oswald:wght@400;700&family=Raleway:wght@400;700&family=Great+Vibes&family=Courgette&family=Indie+Flower&family=Caveat&family=Anton&display=swap');
+        @keyframes loadingAnim {
+            0% {
+                width: 40%;
+                background-color: #4CAF50;
+            }
+
+            50% {
+                width: 50%;
+                background-color: #FF9800;
+            }
+
+            100% {
+                width: 100%;
+                background-color: #F44336;
+            }
+        }
+
+        #loading-text {
+            position: absolute;
+            top: -25px;
+            color: black;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            z-index: 9999;
+            opacity: 0;
+            animation: fadeInText 1s forwards;
+        }
+
+        /* Hiệu ứng hiển thị chữ với độ mờ */
+        @keyframes fadeInText {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Nội dung của trang ẩn ban đầu */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -19,23 +77,35 @@
             overflow: hidden;
             color: white;
             text-align: center;
+            visibility: hidden; /* Giữ body ẩn cho đến khi hoàn tất tải */
+            animation: fadeIn 2s forwards; /* Áp dụng hiệu ứng fadeIn */
         }
-        
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
         .video-background {
             position: fixed;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
             z-index: -1;
         }
-        
+
         .music-player {
             position: relative;
             width: 90%;
             max-width: 400px;
         }
-        
+
         .album-art img {
             width: 30%;
             border-radius: 10px;
@@ -44,13 +114,12 @@
         #progress {
             width: 100%;
             margin-top: 10px;
-            /* -webkit-appearance: none; */
             height: 5px;
             background: white;
             border-radius: 5px;
             cursor: pointer;
         }
-        
+
         .controls {
             display: flex;
             justify-content: space-between;
@@ -71,7 +140,7 @@
             display: flex;
             gap: 20px;
         }
-        
+
         .time {
             display: flex;
             justify-content: space-between;
@@ -89,6 +158,7 @@
             font-size: 16px;
             margin-top: 15px;
         }
+
         #currentLyric {
             font-family: 'Indie Flower', cursive;
             color: orange;
@@ -99,10 +169,15 @@
             font-family: 'Pacifico', cursive;
             color: orange;
         }
-
     </style>
+
 </head>
+
 <body>
+    <div id="loading">
+        <div id="loading-text">Đợi tý :v</div>
+    </div>
+
     <video class="video-background" autoplay muted loop>
         <source src="3179832132751004821.mp4" type="video/mp4">
     </video>
@@ -132,6 +207,7 @@
             <p id="currentLyric">...</p>
         </div>
     </div>
+
     <script>
         const audio = document.getElementById("audio");
         const playPauseBtn = document.getElementById("playPause");
@@ -139,7 +215,7 @@
         const currentTimeEl = document.getElementById("currentTime");
         const durationEl = document.getElementById("duration");
         const currentLyricEl = document.getElementById("currentLyric");
-        
+
         let lyrics = [];
 
         playPauseBtn.addEventListener("click", () => {
@@ -198,10 +274,22 @@
 
         loadLyrics("1736760450082.lrc");
 
-        window.onload = function() {
-            audio.play();
-            playPauseBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+        window.onload = function () {
+            const loading = document.getElementById('loading');
+            let progressWidth = 0;
+            const interval = setInterval(function () {
+                progressWidth += 1;
+                loading.style.width = progressWidth + '%';
+                if (progressWidth >= 100) {
+                    clearInterval(interval);
+                    loading.style.display = 'none';  // Ẩn thanh loading khi hoàn tất
+                    document.body.style.visibility = 'visible';  // Hiển thị body với hiệu ứng fadeIn
+                    audio.play();
+                    playPauseBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+                }
+            }, 50);
         }
     </script>
 </body>
+
 </html>

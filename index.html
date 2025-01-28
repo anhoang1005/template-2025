@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cửa sổ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .first-body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background: url('1344005.jpeg') no-repeat center/cover;
+            padding: 10px;
+        }
+
+        .first-body .container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            backdrop-filter: blur(10px);
+        }
+
+        .first-body h1 {
+            font-family: 'Indie Flower', cursive;
+            color: #deee05;
+            font-size: 28px;
+        }
+
+        .first-body .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Nút chung */
+        .first-body button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Nút "Có" */
+        .first-body #yes-btn {
+            background-color: #ff4d6d;
+            color: white;
+        }
+
+        #yes-btn:hover {
+            background-color: #d62828;
+        }
+
+        /* Nút "Không" chạy trốn */
+        #no-btn {
+            background-color: gray;
+            color: white;
+            position: absolute;
+        }
+
+        /* Ẩn tin nhắn mặc định */
+        .hidden {
+            display: none;
+        }
+
+        /* Tin nhắn xác nhận */
+        .first-body #message {
+            font-size: 20px;
+            color: green;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 22px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            #no-btn {
+                position: static;
+                margin-top: 10px;
+            }
+        }
+
+        .second-body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+            visibility: hidden;
+            /* Giữ body ẩn cho đến khi hoàn tất tải */
+            animation: fadeIn 2s forwards;
+            /* Áp dụng hiệu ứng fadeIn */
+        }
+
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .music-player {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .album-art img {
+            width: 30%;
+            border-radius: 10px;
+        }
+
+        #progress {
+            width: 100%;
+            margin-top: 10px;
+            height: 5px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .center-controls {
+            display: flex;
+            gap: 20px;
+        }
+
+        .time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .lyrics-container {
+            height: 50px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        #currentLyric {
+            font-family: 'Indie Flower', cursive;
+            color: orange;
+            font-weight: bold;
+        }
+
+        .song-name {
+            font-family: 'Pacifico', cursive;
+            color: orange;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="first-body">
+        <div class="container">
+            <h1 class="my-ask">Cùng đi xem pháo hoa nhé? 🎆</h1>
+            <div class="buttons">
+                <button id="yes-btn">Có 💖</button>
+                <button id="no-btn">Không 😢</button>
+            </div>
+            <p id="message" class="hidden">Yay! Hẹn gặp em nhé! 🎇💖</p>
+        </div>
+    </div>
+
+    <div class="second-body">
+        <video class="video-background" autoplay muted loop>
+            <source src="3179832132751004821.mp4" type="video/mp4">
+        </video>
+        <div class="music-player">
+            <div class="album-art">
+                <img src="231fb5027639114dd7cf3f8f3ef9cb86.gif" alt="Album Art">
+            </div>
+            <div class="song-info">
+                <h2 class="song-name">Hứa rồi nhá :vv</h2>
+            </div>
+            <audio id="audio" src="Blue-Yung-Kai.mp3"></audio>
+            <div class="time">
+                <span id="currentTime">0:00</span>
+                <span id="duration">4:30</span>
+            </div>
+            <input type="range" id="progress" value="0" min="0" max="100">
+            <div class="controls">
+                <button style="font-size: 1.2em;"><i class="fa-solid fa-shuffle"></i></button>
+                <div class="center-controls">
+                    <button><i class="fa-solid fa-backward-step"></i></button>
+                    <button id="playPause"><i class="fa-solid fa-play"></i></button>
+                    <button><i class="fa-solid fa-forward-step"></i></button>
+                </div>
+                <button style="font-size: 1.2em;"><i class="fa-solid fa-heart"></i></button>
+            </div>
+            <div class="lyrics-container">
+                <p id="currentLyric">...</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script>
+    const body1 = document.querySelector(".first-body");
+    const body2 = document.querySelector(".second-body");
+    const noBtn = document.getElementById("no-btn");
+    const yesBtn = document.getElementById("yes-btn");
+
+    const audio = document.getElementById("audio");
+
+    body2.style.visibility = "hidden";  // Giữ visibility ẩn
+    yesBtn.addEventListener("click", function () {
+        body1.style.display = "none";  // Ẩn body 1
+        body2.style.visibility = "visible";  // Hiển thị body 2
+        audio.play();
+        loadLyrics("1736760450082.lrc");
+    });
+    function moveButton() {
+        let x = Math.random() * 200 - 100;
+        let y = Math.random() * 200 - 100;
+        noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+    noBtn.addEventListener("mouseover", moveButton);
+    noBtn.addEventListener("touchstart", moveButton);
+
+    const playPauseBtn = document.getElementById("playPause");
+    const progress = document.getElementById("progress");
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationEl = document.getElementById("duration");
+    const currentLyricEl = document.getElementById("currentLyric");
+
+    let lyrics = [];
+
+    playPauseBtn.addEventListener("click", () => {
+        if (audio.paused) {
+            audio.play();
+            playPauseBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+        } else {
+            audio.pause();
+            playPauseBtn.innerHTML = `<i class="fa-solid fa-play"></i>`;
+        }
+    });
+
+    audio.addEventListener("timeupdate", () => {
+        const progressPercent = (audio.currentTime / audio.duration) * 100;
+        progress.value = progressPercent;
+        const minutes = Math.floor(audio.currentTime / 60);
+        const seconds = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
+        currentTimeEl.textContent = `${minutes}:${seconds}`;
+        updateLyrics();
+    });
+
+    progress.addEventListener("input", () => {
+        audio.currentTime = (progress.value / 100) * audio.duration;
+    });
+
+    async function loadLyrics(url) {
+        const response = await fetch(url);
+        const text = await response.text();
+        parseLyrics(text);
+    }
+
+    function parseLyrics(text) {
+        lyrics = text.split("\n").map(line => {
+            const match = line.match(/\[(\d+):(\d+\.\d+)\](.*)/);
+            if (match) {
+                const minutes = parseInt(match[1]);
+                const seconds = parseFloat(match[2]);
+                const time = minutes * 60 + seconds;
+                const content = match[3].trim();
+                return { time, content };
+            }
+            return null;
+        }).filter(line => line !== null);
+    }
+
+    function updateLyrics() {
+        const currentTime = audio.currentTime;
+        let currentLyric = lyrics.find((line, index) => {
+            return currentTime >= line.time && (index === lyrics.length - 1 || currentTime < lyrics[index + 1].time);
+        });
+
+        if (currentLyric) {
+            currentLyricEl.textContent = currentLyric.content;
+        }
+    }
+</script>

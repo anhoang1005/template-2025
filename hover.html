@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cửa sổ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background: url('1344005.jpeg') no-repeat center/cover;
+            padding: 10px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-family: 'Indie Flower', cursive;
+            color: #deee05;
+            font-size: 28px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Nút chung */
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Nút "Có" */
+        #yes-btn {
+            background-color: #ff4d6d;
+            color: white;
+        }
+
+        #yes-btn:hover {
+            background-color: #d62828;
+        }
+
+        /* Nút "Không" chạy trốn */
+        #no-btn {
+            background-color: gray;
+            color: white;
+            position: absolute;
+        }
+
+        /* Ẩn tin nhắn mặc định */
+        .hidden {
+            display: none;
+        }
+
+        /* Tin nhắn xác nhận */
+        #message {
+            font-size: 20px;
+            color: green;
+            margin-top: 20px;
+        }
+
+        /* Responsive cho điện thoại */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 22px; /* Nhỏ hơn cho mobile */
+            }
+
+            .buttons {
+                flex-direction: column; /* Nút xếp dọc */
+            }
+
+            button {
+                width: 100%; /* Nút dễ bấm hơn */
+            }
+
+            #no-btn {
+                position: static; /* Không chạy lung tung trên mobile */
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="my-ask">Đi xem pháo hoa nhé? 🎆</h1>
+        <div class="buttons">
+            <button id="yes-btn">Có ❤️</button>
+            <button id="no-btn">Không 😢</button>
+        </div>
+        <p id="message" class="hidden">Yay! Hẹn gặp em nhé! 🎇💖</p>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById("no-btn");
+        const yesBtn = document.getElementById("yes-btn");
+
+        // Khi nhấn "Có" => Hiện tin nhắn / Chuyển trang
+        yesBtn.addEventListener("click", function() {
+            setTimeout(() => {
+                window.location.href = "/template/home.html"; // Điều hướng sau 1s
+            }, 1000);
+        });
+
+        // Nút "Không" chạy trốn
+        function moveButton() {
+            let x = Math.random() * 200 - 100;
+            let y = Math.random() * 200 - 100;
+            noBtn.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        // Áp dụng cho PC (hover) và mobile (chạm)
+        noBtn.addEventListener("mouseover", moveButton);
+        noBtn.addEventListener("touchstart", moveButton);
+    </script>
+
+</body>
+</html>

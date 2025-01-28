@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Heart</title>
+    <script src="https://kit.fontawesome.com/d75d72b9b4.js" crossorigin="anonymous"></script>
+    <style>
+
+        /* Import nhiều font từ Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;700&family=Pacifico&family=Lobster&family=Roboto:wght@400;700&family=Oswald:wght@400;700&family=Raleway:wght@400;700&family=Great+Vibes&family=Courgette&family=Indie+Flower&family=Caveat&family=Anton&display=swap');
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+        }
+        
+        .video-background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        
+        .music-player {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .album-art img {
+            width: 30%;
+            border-radius: 10px;
+        }
+
+        #progress {
+            width: 100%;
+            margin-top: 10px;
+            /* -webkit-appearance: none; */
+            height: 5px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .center-controls {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .lyrics-container {
+            height: 50px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        #currentLyric {
+            font-family: 'Indie Flower', cursive;
+            color: orange;
+            font-weight: bold;
+        }
+
+        .song-name {
+            font-family: 'Indie Flower', cursive;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+    <video class="video-background" autoplay muted loop>
+        <source src="3179832132751004821.mp4" type="video/mp4">
+    </video>
+    <div class="music-player">
+        <div class="album-art">
+            <img src="1344003.jpeg" alt="Album Art">
+        </div>
+        <div class="song-info">
+            <h2 class="song-name">blue - yung kai</h2>
+        </div>
+        <audio id="audio" src="Blue-Yung-Kai.mp3"></audio>
+        <div class="time">
+            <span id="currentTime">0:00</span>
+            <span id="duration">4:30</span>
+        </div>
+        <input type="range" id="progress" value="0" min="0" max="100">
+        <div class="controls">
+            <button style="font-size: 1.2em;"><i class="fa-solid fa-shuffle"></i></button>
+            <div class="center-controls">
+                <button><i class="fa-solid fa-backward-step"></i></button>
+                <button id="playPause"><i class="fa-solid fa-play"></i></button>
+                <button><i class="fa-solid fa-forward-step"></i></button>
+            </div>
+            <button style="font-size: 1.2em;"><i class="fa-solid fa-heart"></i></button>
+        </div>
+        <div class="lyrics-container">
+            <p id="currentLyric">...</p>
+        </div>
+    </div>
+    <script>
+        const audio = document.getElementById("audio");
+        const playPauseBtn = document.getElementById("playPause");
+        const progress = document.getElementById("progress");
+        const currentTimeEl = document.getElementById("currentTime");
+        const durationEl = document.getElementById("duration");
+        const currentLyricEl = document.getElementById("currentLyric");
+        
+        let lyrics = [];
+
+        playPauseBtn.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+            } else {
+                audio.pause();
+                playPauseBtn.innerHTML = `<i class="fa-solid fa-play"></i>`;
+            }
+        });
+
+        audio.addEventListener("timeupdate", () => {
+            const progressPercent = (audio.currentTime / audio.duration) * 100;
+            progress.value = progressPercent;
+            const minutes = Math.floor(audio.currentTime / 60);
+            const seconds = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
+            currentTimeEl.textContent = `${minutes}:${seconds}`;
+            updateLyrics();
+        });
+
+        progress.addEventListener("input", () => {
+            audio.currentTime = (progress.value / 100) * audio.duration;
+        });
+
+        async function loadLyrics(url) {
+            const response = await fetch(url);
+            const text = await response.text();
+            parseLyrics(text);
+        }
+
+        function parseLyrics(text) {
+            lyrics = text.split("\n").map(line => {
+                const match = line.match(/\[(\d+):(\d+\.\d+)\](.*)/);
+                if (match) {
+                    const minutes = parseInt(match[1]);
+                    const seconds = parseFloat(match[2]);
+                    const time = minutes * 60 + seconds;
+                    const content = match[3].trim();
+                    return { time, content };
+                }
+                return null;
+            }).filter(line => line !== null);
+        }
+
+        function updateLyrics() {
+            const currentTime = audio.currentTime;
+            let currentLyric = lyrics.find((line, index) => {
+                return currentTime >= line.time && (index === lyrics.length - 1 || currentTime < lyrics[index + 1].time);
+            });
+
+            if (currentLyric) {
+                currentLyricEl.textContent = currentLyric.content;
+            }
+        }
+
+        loadLyrics("1736760450082.lrc");
+    </script>
+</body>
+</html>

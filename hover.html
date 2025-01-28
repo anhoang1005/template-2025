@@ -107,9 +107,9 @@
 <body>
 
     <div class="container">
-        <h1 class="my-ask">Đi xem pháo hoa nhé? 🎆</h1>
+        <h1 class="my-ask">Cùng đi xem pháo hoa nhé? 🎆</h1>
         <div class="buttons">
-            <button id="yes-btn">Có ❤️</button>
+            <button id="yes-btn">Có 💖</button>
             <button id="no-btn">Không 😢</button>
         </div>
         <p id="message" class="hidden">Yay! Hẹn gặp em nhé! 🎇💖</p>
@@ -121,9 +121,7 @@
 
         // Khi nhấn "Có" => Hiện tin nhắn / Chuyển trang
         yesBtn.addEventListener("click", function() {
-            setTimeout(() => {
-                window.location.href = "/template-2025/home.html"; // Điều hướng sau 1s
-            }, 1000);
+            window.location.href = "/template-2025/home.html";
         });
 
         // Nút "Không" chạy trốn

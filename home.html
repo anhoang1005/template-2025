@@ -7,7 +7,8 @@
     <title>My Heart</title>
     <script src="https://kit.fontawesome.com/d75d72b9b4.js" crossorigin="anonymous"></script>
     <style>
-         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;700&family=Pacifico&family=Lobster&family=Roboto:wght@400;700&family=Oswald:wght@400;700&family=Raleway:wght@400;700&family=Great+Vibes&family=Courgette&family=Indie+Flower&family=Caveat&family=Anton&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;700&family=Pacifico&family=Lobster&family=Roboto:wght@400;700&family=Oswald:wght@400;700&family=Raleway:wght@400;700&family=Great+Vibes&family=Courgette&family=Indie+Flower&family=Caveat&family=Anton&display=swap');
+
         #loading {
             position: fixed;
             top: 50%;
@@ -78,14 +79,17 @@
             overflow: hidden;
             color: white;
             text-align: center;
-            visibility: hidden; /* Giữ body ẩn cho đến khi hoàn tất tải */
-            animation: fadeIn 2s forwards; /* Áp dụng hiệu ứng fadeIn */
+            visibility: hidden;
+            /* Giữ body ẩn cho đến khi hoàn tất tải */
+            animation: fadeIn 2s forwards;
+            /* Áp dụng hiệu ứng fadeIn */
         }
 
         @keyframes fadeIn {
             0% {
                 opacity: 0;
             }
+
             100% {
                 opacity: 1;
             }
@@ -285,8 +289,12 @@
                     clearInterval(interval);
                     loading.style.display = 'none';  // Ẩn thanh loading khi hoàn tất
                     document.body.style.visibility = 'visible';  // Hiển thị body với hiệu ứng fadeIn
-                    audio.play();
-                    playPauseBtn.innerHTML = `<i class="fa-solid fa-pause"></i>`;
+                    setTimeout(function () {
+                        audio.muted = false;  // Bỏ mute
+                        audio.play().catch(function (error) {
+                            console.log("Không thể phát âm thanh tự động:", error);
+                        });
+                    }, 500);
                 }
             }, 50);
         }
